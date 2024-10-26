@@ -139,10 +139,10 @@ const updateRunningScore = function () {
     const winnerDiv = document.createElement("div");
     document.body.appendChild(winnerDiv);
     if (humanScore == 5) {
-      winnerDiv.textContent = "human is the overall winner!";
+      winnerDiv.textContent = "Human is the overall winner!";
     }
     else {
-      winnerDiv.textContent = "computer is the overall winner!";;
+      winnerDiv.textContent = "Computer is the overall winner!";;
     }
   }
 }
