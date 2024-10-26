@@ -17,57 +17,57 @@ const getComputerChoice = function() {
       computerChoice = "scissors";
       break;
   }
-  console.log("The computer has chosen " + computerChoice);
+  choiceNotification("computerChoice", computerChoice);
   return computerChoice;
 }
 
 const playRound = function(humanChoice) {
   const computerChoice = getComputerChoice();
-  let decision = "";
+  let winner = "";
   if (humanChoice == options[0]) {
-    switch (computerChoice){
+    switch(computerChoice) {
       case options[1]:
-        decision = "lose";
+        winner = "Computer";
         computerScore ++;
         break;
-      case "scissors":
-        decision = "You win!";
+      case options[2]:
+        winner = "Human";
         humanScore ++;
         break;
       default:
-        decision = "It's a draw!";
+        winner = "Nobody";
     }
   }
-  else if (humanChoice == "paper") {
-    switch (computerChoice){
-      case "scissors":
-        decision = "You lose!";
+  else if (humanChoice == options[1]) {
+    switch(computerChoice) {
+      case options[2]:
+        winner = "Computer";
         computerScore ++;
         break;
-      case "rock":
-        decision = "You win!";
+      case options[0]:
+        winner = "Human";
         humanScore ++;
         break;
       default:
-        decision = "It's a draw!";
+        winner = "Nobody";
     }
   }
-  else if (humanChoice == "scissors") {
-    switch (computerChoice){
-      case "rock":
-        decision = "You lose!";
+  else if (humanChoice == options[2]) {
+    switch(computerChoice) {
+      case options[0]:
+        winner = "Computer";
         computerScore ++;
         break;
-      case "paper":
-        decision = "You win!";
+      case options[1]:
+        winner = "Human";
         humanScore ++;
         break;
       default:
-        decision = "It's a draw!";
+        winner = "Nobody";
     }
   }
-  console.log(decision);
-  return decision;
+  resultsNotification(winner);
+  updateRunningScore()
 }
 
 const buttonsSetup = function(){
@@ -89,13 +89,74 @@ const buttonClick = function() {
   optionButtons = document.querySelector("#optionButtons");
   optionButtons.addEventListener('click', event => {
     if (event.target.matches("button")){
+      resetResults ();
       humanChoice = event.target.textContent;
-      console.log("You have chosen " + humanChoice + " !")
+      choiceNotification("humanChoice", humanChoice);
       playRound(humanChoice);
       return;
     }
+  
   })
 }
 
+runningScoreSetup = function () {
+  const runningScore = document.createElement("div");
+  runningScore.setAttribute("id", "runningScoreDiv");
+  document.body.appendChild(runningScore);
+}
+
+resultsDivSetup = function () {
+  const resultsDiv = document.createElement("div");
+  resultsDiv.setAttribute("id", "resultsDiv");
+  document.body.appendChild(resultsDiv);
+}
+
+choiceNotification = function (id, choice) {
+  const text = document.createElement("h2");
+  text.setAttribute("id", id);
+  if (id == "humanChoice"){
+    text.textContent = "You have chosen " + choice;
+  }
+  if (id == "computerChoice") {
+    text.textContent = "The computer has chosen " + choice;
+  }
+  const results = document.querySelector("#resultsDiv");
+  results.appendChild(text);
+}
+
+const resultsNotification = function (winner) {
+  const text = document.createElement("h1");
+  text.setAttribute("id", "resultsNotification");
+  text.textContent = "The winner is . . . " + winner + "!";
+  const results = document.querySelector("#resultsDiv");
+  results.appendChild(text);
+}
+
+const updateRunningScore = function () {
+  const runningScoreDiv = document.querySelector("#runningScoreDiv");
+  runningScoreDiv.textContent = "Human " + humanScore + ": Computer " + computerScore;
+  if (humanScore == 5 || computerScore == 5) {
+    const winnerDiv = document.createElement("div");
+    document.body.appendChild(winnerDiv);
+    if (humanScore == 5) {
+      winnerDiv.textContent = "human is the overall winner!";
+    }
+    else {
+      winnerDiv.textContent = "computer is the overall winner!";;
+    }
+  }
+}
+
+resetResults = function () {
+  const results = document.querySelector("#resultsDiv");
+  if (results) {
+    while(results.firstChild){
+      results.removeChild(results.firstChild);
+    }
+  }
+}
+
 buttonsSetup();
+resultsDivSetup();
+runningScoreSetup();
 buttonClick();
